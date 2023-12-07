@@ -120,26 +120,59 @@ void outputDictionary(Node*& root) {
     f.close();
 }
 
+void Suggestion(Node* root, string Pre) {
+    if (root == NULL) return;
+    if (root->isEnd)
+        cout << Pre << '\n';
+    for (int i = 0; i < ALPHABET_SIZE; i++)
+        if (root->Child[i] != NULL) {
+            char ch = (i == 26) ? ' ' : i + 'a';
+            Suggestion(root->Child[i], Pre + ch);
+        }
+}
+
+void printAutoComplete(Node* root, string key) {
+    if (root == NULL) {
+        cout << "Empty!";
+        return;
+    }
+    Node* p = root;
+    for (int i = 0; i < key.length(); i++) {
+        int index = (key[i] == ' ') ? 26 : key[i] - 'a';
+        if (p->Child[index] == NULL) {
+            cout << "Empty!";
+            return;
+        }
+        p = p->Child[index];
+    }
+    if (isEmpty(p)) {
+        cout << key << '\n';
+        return;
+    }
+    Suggestion(p, key);
+}
+
 void menu() {
-	cout << "\n---------- Menu ------------\n";
-	cout << "1. Search\n";
-	cout << "2. Insert\n";
-	cout << "3. Delete\n";
-	cout << "0. Exit\n";
+    cout << "\n---------- Menu ------------\n";
+    cout << "1. Search\n";
+    cout << "2. Insert\n";
+    cout << "3. Delete\n";
+    cout << "4. Suggestion\n";
+    cout << "0. Exit\n";
 }
 
 void load_menu() {
     Node* root = new Node();
     inputDictionary(root);
-	int k = 0;
-	do {
-		system("cls");
-		menu();
+    int k = 0;
+    do {
+        system("cls");
+        menu();
 
-		cout << "Enter your choice: "; cin >> k;
-		switch (k) {
-		case 1:
-		{
+        cout << "Enter your choice: "; cin >> k;
+        switch (k) {
+        case 1:
+        {
             system("cls");
             string Key;
             cout << "->: ";
@@ -150,9 +183,9 @@ void load_menu() {
             cout << '\n';
             system("pause");
             break;
-		}
-		case 2:
-		{
+        }
+        case 2:
+        {
             system("cls");
             string Key, Mean;
             cout << "->: ";
@@ -165,10 +198,10 @@ void load_menu() {
             Insert(root, Key, Mean);
             outputDictionary(root);
             system("pause");
-			break;
-		}
-		case 3:
-		{
+            break;
+        }
+        case 3:
+        {
             system("cls");
             string Key;
             cout << "->: ";
@@ -178,18 +211,32 @@ void load_menu() {
             Delete(root, Key);
             outputDictionary(root);
             system("pause");
-			break;
-		}
-		case 0: {
-			system("cls");
-			return;
-		}
-		default: {
-			cout << "Error!\n";
-			system("pause");
-		}
-		}
-	} while (true);
+            break;
+        }
+        case 4:
+        {
+            system("cls");
+            string Key;
+            cout << "->: ";
+            cin.ignore();
+            getline(cin, Key);
+            Key = lowerString(Key);
+            cout << "Suggestion:\n";
+            printAutoComplete(root, Key);
+            cout << '\n';
+            system("pause");
+            break;
+        }
+        case 0: {
+            system("cls");
+            return;
+        }
+        default: {
+            cout << "Error!\n";
+            system("pause");
+        }
+        }
+    } while (true);
 }
 
 int main() {

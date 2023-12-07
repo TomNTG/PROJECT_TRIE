@@ -133,7 +133,7 @@ int main() {
 
     Delete(root, "heroplane");
     Delete(root, "one");
-    
+
     cout << "\nDelete: heroplane one\n";
     cout << "hero" << " --- " << output[Search(root, "hero")] << '\n';
     cout << "heroplane" << " --- " << output[Search(root, "heroplane")] << '\n';
